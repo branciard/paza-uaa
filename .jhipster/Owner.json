@@ -1,0 +1,25 @@
+{
+    "fluentMethods": true,
+    "relationships": [
+        {
+            "relationshipType": "one-to-one",
+            "relationshipName": "user",
+            "otherEntityName": "user",
+            "otherEntityField": "id",
+            "ownerSide": true,
+            "otherEntityRelationshipName": "owner"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "ecert",
+            "fieldType": "String"
+        }
+    ],
+    "changelogDate": "20161114143259",
+    "entityTableName": "owner",
+    "dto": "no",
+    "pagination": "no",
+    "service": "no",
+    "microserviceName": "pazauaa"
+}

@@ -1,0 +1,13 @@
+
+
+
+
+entity Owner {
+	ecert String
+}
+
+relationship OneToOne {
+  Owner{user} to User
+}
+
+microservice Owner with pazauaa
