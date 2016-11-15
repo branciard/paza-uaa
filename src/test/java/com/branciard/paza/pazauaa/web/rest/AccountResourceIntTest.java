@@ -1,6 +1,7 @@
 package com.branciard.paza.pazauaa.web.rest;
 
 import com.branciard.paza.pazauaa.PazauaaApp;
+import com.branciard.paza.pazauaa.config.JHipsterProperties;
 import com.branciard.paza.pazauaa.domain.Authority;
 import com.branciard.paza.pazauaa.domain.User;
 import com.branciard.paza.pazauaa.repository.AuthorityRepository;
@@ -45,6 +46,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class AccountResourceIntTest {
 
     @Inject
+    private JHipsterProperties jHipsterProperties;
+
+    @Inject
     private UserRepository userRepository;
 
     @Inject
@@ -69,6 +73,7 @@ public class AccountResourceIntTest {
         doNothing().when(mockMailService).sendActivationEmail((User) anyObject(), anyString());
 
         AccountResource accountResource = new AccountResource();
+        ReflectionTestUtils.setField(accountResource, "jHipsterProperties", jHipsterProperties);
         ReflectionTestUtils.setField(accountResource, "userRepository", userRepository);
         ReflectionTestUtils.setField(accountResource, "userService", userService);
         ReflectionTestUtils.setField(accountResource, "mailService", mockMailService);

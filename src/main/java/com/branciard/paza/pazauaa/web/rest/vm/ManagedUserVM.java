@@ -6,7 +6,6 @@ import java.util.Set;
 
 import com.branciard.paza.pazauaa.domain.User;
 import com.branciard.paza.pazauaa.service.dto.UserDTO;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 /**

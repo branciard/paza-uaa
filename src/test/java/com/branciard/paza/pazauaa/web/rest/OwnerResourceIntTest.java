@@ -22,7 +22,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import java.util.List;
@@ -40,8 +39,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(classes = PazauaaApp.class)
 public class OwnerResourceIntTest {
 
-    private static final String DEFAULT_ECERT = "AAAAA";
-    private static final String UPDATED_ECERT = "BBBBB";
+    private static final String DEFAULT_ECERT = "AAAAAAAAAA";
+    private static final String UPDATED_ECERT = "BBBBBBBBBB";
 
     @Inject
     private OwnerRepository ownerRepository;
@@ -59,7 +58,7 @@ public class OwnerResourceIntTest {
 
     private Owner owner;
 
-    @PostConstruct
+    @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
         OwnerResource ownerResource = new OwnerResource();
