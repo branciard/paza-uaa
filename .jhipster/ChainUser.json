@@ -12,6 +12,29 @@
     ],
     "fields": [
         {
+            "fieldName": "enrollmentId",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "enrollmentSecret",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "type",
+            "fieldType": "ChainUserType",
+            "fieldValues": "CLIENT,PEER,VALIDATOR,AUDITOR",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "activated",
+            "fieldType": "Boolean"
+        },
+        {
             "fieldName": "eCert",
             "fieldType": "String"
         }

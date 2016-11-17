@@ -80,7 +80,7 @@ class ChainUserGatlingTest extends Simulation {
             .exec(http("Create new chainUser")
             .post("/api/chain-users")
             .headers(headers_http_authenticated)
-            .body(StringBody("""{"id":null, "eCert":"SAMPLE_TEXT"}""")).asJSON
+            .body(StringBody("""{"id":null, "enrollmentId":"SAMPLE_TEXT", "enrollmentSecret":"SAMPLE_TEXT", "type":null, "activated":null, "eCert":"SAMPLE_TEXT"}""")).asJSON
             .check(status.is(201))
             .check(headerRegex("Location", "(.*)").saveAs("new_chainUser_url"))).exitHereIfFailed
             .pause(10)

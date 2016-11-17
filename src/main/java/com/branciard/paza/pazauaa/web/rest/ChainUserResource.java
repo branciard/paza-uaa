@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
+import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
@@ -39,7 +40,7 @@ public class ChainUserResource {
      */
     @PostMapping("/chain-users")
     @Timed
-    public ResponseEntity<ChainUser> createChainUser(@RequestBody ChainUser chainUser) throws URISyntaxException {
+    public ResponseEntity<ChainUser> createChainUser(@Valid @RequestBody ChainUser chainUser) throws URISyntaxException {
         log.debug("REST request to save ChainUser : {}", chainUser);
         if (chainUser.getId() != null) {
             return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert("chainUser", "idexists", "A new chainUser cannot already have an ID")).body(null);
@@ -61,7 +62,7 @@ public class ChainUserResource {
      */
     @PutMapping("/chain-users")
     @Timed
-    public ResponseEntity<ChainUser> updateChainUser(@RequestBody ChainUser chainUser) throws URISyntaxException {
+    public ResponseEntity<ChainUser> updateChainUser(@Valid @RequestBody ChainUser chainUser) throws URISyntaxException {
         log.debug("REST request to update ChainUser : {}", chainUser);
         if (chainUser.getId() == null) {
             return createChainUser(chainUser);

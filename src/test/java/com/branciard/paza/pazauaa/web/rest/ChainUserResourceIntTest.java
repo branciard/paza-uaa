@@ -30,6 +30,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import com.branciard.paza.pazauaa.domain.enumeration.ChainUserType;
 /**
  * Test class for the ChainUserResource REST controller.
  *
@@ -38,6 +39,18 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = PazauaaApp.class)
 public class ChainUserResourceIntTest {
+
+    private static final String DEFAULT_ENROLLMENT_ID = "AAAAAAAAAA";
+    private static final String UPDATED_ENROLLMENT_ID = "BBBBBBBBBB";
+
+    private static final String DEFAULT_ENROLLMENT_SECRET = "AAAAAAAAAA";
+    private static final String UPDATED_ENROLLMENT_SECRET = "BBBBBBBBBB";
+
+    private static final ChainUserType DEFAULT_TYPE = ChainUserType.CLIENT;
+    private static final ChainUserType UPDATED_TYPE = ChainUserType.PEER;
+
+    private static final Boolean DEFAULT_ACTIVATED = false;
+    private static final Boolean UPDATED_ACTIVATED = true;
 
     private static final String DEFAULT_E_CERT = "AAAAAAAAAA";
     private static final String UPDATED_E_CERT = "BBBBBBBBBB";
@@ -76,6 +89,10 @@ public class ChainUserResourceIntTest {
      */
     public static ChainUser createEntity(EntityManager em) {
         ChainUser chainUser = new ChainUser()
+                .enrollmentId(DEFAULT_ENROLLMENT_ID)
+                .enrollmentSecret(DEFAULT_ENROLLMENT_SECRET)
+                .type(DEFAULT_TYPE)
+                .activated(DEFAULT_ACTIVATED)
                 .eCert(DEFAULT_E_CERT);
         return chainUser;
     }
@@ -101,7 +118,47 @@ public class ChainUserResourceIntTest {
         List<ChainUser> chainUsers = chainUserRepository.findAll();
         assertThat(chainUsers).hasSize(databaseSizeBeforeCreate + 1);
         ChainUser testChainUser = chainUsers.get(chainUsers.size() - 1);
+        assertThat(testChainUser.getEnrollmentId()).isEqualTo(DEFAULT_ENROLLMENT_ID);
+        assertThat(testChainUser.getEnrollmentSecret()).isEqualTo(DEFAULT_ENROLLMENT_SECRET);
+        assertThat(testChainUser.getType()).isEqualTo(DEFAULT_TYPE);
+        assertThat(testChainUser.isActivated()).isEqualTo(DEFAULT_ACTIVATED);
         assertThat(testChainUser.geteCert()).isEqualTo(DEFAULT_E_CERT);
+    }
+
+    @Test
+    @Transactional
+    public void checkEnrollmentIdIsRequired() throws Exception {
+        int databaseSizeBeforeTest = chainUserRepository.findAll().size();
+        // set the field null
+        chainUser.setEnrollmentId(null);
+
+        // Create the ChainUser, which fails.
+
+        restChainUserMockMvc.perform(post("/api/chain-users")
+                .contentType(TestUtil.APPLICATION_JSON_UTF8)
+                .content(TestUtil.convertObjectToJsonBytes(chainUser)))
+                .andExpect(status().isBadRequest());
+
+        List<ChainUser> chainUsers = chainUserRepository.findAll();
+        assertThat(chainUsers).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
+    public void checkTypeIsRequired() throws Exception {
+        int databaseSizeBeforeTest = chainUserRepository.findAll().size();
+        // set the field null
+        chainUser.setType(null);
+
+        // Create the ChainUser, which fails.
+
+        restChainUserMockMvc.perform(post("/api/chain-users")
+                .contentType(TestUtil.APPLICATION_JSON_UTF8)
+                .content(TestUtil.convertObjectToJsonBytes(chainUser)))
+                .andExpect(status().isBadRequest());
+
+        List<ChainUser> chainUsers = chainUserRepository.findAll();
+        assertThat(chainUsers).hasSize(databaseSizeBeforeTest);
     }
 
     @Test
@@ -115,6 +172,10 @@ public class ChainUserResourceIntTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                 .andExpect(jsonPath("$.[*].id").value(hasItem(chainUser.getId().intValue())))
+                .andExpect(jsonPath("$.[*].enrollmentId").value(hasItem(DEFAULT_ENROLLMENT_ID.toString())))
+                .andExpect(jsonPath("$.[*].enrollmentSecret").value(hasItem(DEFAULT_ENROLLMENT_SECRET.toString())))
+                .andExpect(jsonPath("$.[*].type").value(hasItem(DEFAULT_TYPE.toString())))
+                .andExpect(jsonPath("$.[*].activated").value(hasItem(DEFAULT_ACTIVATED.booleanValue())))
                 .andExpect(jsonPath("$.[*].eCert").value(hasItem(DEFAULT_E_CERT.toString())));
     }
 
@@ -129,6 +190,10 @@ public class ChainUserResourceIntTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(chainUser.getId().intValue()))
+            .andExpect(jsonPath("$.enrollmentId").value(DEFAULT_ENROLLMENT_ID.toString()))
+            .andExpect(jsonPath("$.enrollmentSecret").value(DEFAULT_ENROLLMENT_SECRET.toString()))
+            .andExpect(jsonPath("$.type").value(DEFAULT_TYPE.toString()))
+            .andExpect(jsonPath("$.activated").value(DEFAULT_ACTIVATED.booleanValue()))
             .andExpect(jsonPath("$.eCert").value(DEFAULT_E_CERT.toString()));
     }
 
@@ -150,6 +215,10 @@ public class ChainUserResourceIntTest {
         // Update the chainUser
         ChainUser updatedChainUser = chainUserRepository.findOne(chainUser.getId());
         updatedChainUser
+                .enrollmentId(UPDATED_ENROLLMENT_ID)
+                .enrollmentSecret(UPDATED_ENROLLMENT_SECRET)
+                .type(UPDATED_TYPE)
+                .activated(UPDATED_ACTIVATED)
                 .eCert(UPDATED_E_CERT);
 
         restChainUserMockMvc.perform(put("/api/chain-users")
@@ -161,6 +230,10 @@ public class ChainUserResourceIntTest {
         List<ChainUser> chainUsers = chainUserRepository.findAll();
         assertThat(chainUsers).hasSize(databaseSizeBeforeUpdate);
         ChainUser testChainUser = chainUsers.get(chainUsers.size() - 1);
+        assertThat(testChainUser.getEnrollmentId()).isEqualTo(UPDATED_ENROLLMENT_ID);
+        assertThat(testChainUser.getEnrollmentSecret()).isEqualTo(UPDATED_ENROLLMENT_SECRET);
+        assertThat(testChainUser.getType()).isEqualTo(UPDATED_TYPE);
+        assertThat(testChainUser.isActivated()).isEqualTo(UPDATED_ACTIVATED);
         assertThat(testChainUser.geteCert()).isEqualTo(UPDATED_E_CERT);
     }
 

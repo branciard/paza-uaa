@@ -1,0 +1,23 @@
+
+
+
+ enum ChainUserType {
+    CLIENT, PEER, VALIDATOR, AUDITOR
+  }
+
+
+/**
+ * The ChainUser entity.
+ */
+entity ChainUser {
+
+	enrollmentID String required,
+    enrollmentSecret String,
+    type ChainUserType required,
+    activated Boolean,
+	eCert String,
+}
+
+relationship OneToOne {
+  ChainUser{user} to User
+}
