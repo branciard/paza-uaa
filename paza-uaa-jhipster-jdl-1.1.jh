@@ -1,0 +1,14 @@
+
+
+
+/**
+ * The ChainUser entity.
+ */
+entity ChainUser {
+
+	eCert String,
+}
+
+relationship OneToOne {
+  ChainUser{user} to User
+}

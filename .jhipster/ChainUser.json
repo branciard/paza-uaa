@@ -1,0 +1,25 @@
+{
+    "fluentMethods": true,
+    "relationships": [
+        {
+            "relationshipType": "one-to-one",
+            "relationshipName": "user",
+            "otherEntityName": "user",
+            "otherEntityField": "id",
+            "ownerSide": true,
+            "otherEntityRelationshipName": "chainUser"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "eCert",
+            "fieldType": "String"
+        }
+    ],
+    "changelogDate": "20161117171143",
+    "javadoc": "The ChainUser entity.",
+    "entityTableName": "chain_user",
+    "dto": "no",
+    "pagination": "no",
+    "service": "no"
+}
