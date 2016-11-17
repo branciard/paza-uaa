@@ -1,6 +1,5 @@
 package com.branciard.paza.pazauaa.domain;
 
-import io.swagger.annotations.ApiModel;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -12,10 +11,8 @@ import java.util.Objects;
 import com.branciard.paza.pazauaa.domain.enumeration.ChainUserType;
 
 /**
- * The ChainUser entity.                                                       
- * 
+ * A ChainUser.
  */
-@ApiModel(description = "The ChainUser entity.")
 @Entity
 @Table(name = "chain_user")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
@@ -39,15 +36,12 @@ public class ChainUser implements Serializable {
     @Column(name = "type", nullable = false)
     private ChainUserType type;
 
-    @Column(name = "activated")
+    @NotNull
+    @Column(name = "activated", nullable = false)
     private Boolean activated;
 
     @Column(name = "e_cert")
     private String eCert;
-
-    @OneToOne
-    @JoinColumn(unique = true)
-    private User user;
 
     public Long getId() {
         return id;
@@ -120,19 +114,6 @@ public class ChainUser implements Serializable {
 
     public void seteCert(String eCert) {
         this.eCert = eCert;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public ChainUser user(User user) {
-        this.user = user;
-        return this;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
     }
 
     @Override

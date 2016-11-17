@@ -2,8 +2,7 @@ package com.branciard.paza.pazauaa.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import com.branciard.paza.pazauaa.domain.ChainUser;
-
-import com.branciard.paza.pazauaa.repository.ChainUserRepository;
+import com.branciard.paza.pazauaa.service.ChainUserService;
 import com.branciard.paza.pazauaa.web.rest.util.HeaderUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,7 +28,7 @@ public class ChainUserResource {
     private final Logger log = LoggerFactory.getLogger(ChainUserResource.class);
         
     @Inject
-    private ChainUserRepository chainUserRepository;
+    private ChainUserService chainUserService;
 
     /**
      * POST  /chain-users : Create a new chainUser.
@@ -45,7 +44,7 @@ public class ChainUserResource {
         if (chainUser.getId() != null) {
             return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert("chainUser", "idexists", "A new chainUser cannot already have an ID")).body(null);
         }
-        ChainUser result = chainUserRepository.save(chainUser);
+        ChainUser result = chainUserService.save(chainUser);
         return ResponseEntity.created(new URI("/api/chain-users/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert("chainUser", result.getId().toString()))
             .body(result);
@@ -67,7 +66,7 @@ public class ChainUserResource {
         if (chainUser.getId() == null) {
             return createChainUser(chainUser);
         }
-        ChainUser result = chainUserRepository.save(chainUser);
+        ChainUser result = chainUserService.save(chainUser);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert("chainUser", chainUser.getId().toString()))
             .body(result);
@@ -82,8 +81,7 @@ public class ChainUserResource {
     @Timed
     public List<ChainUser> getAllChainUsers() {
         log.debug("REST request to get all ChainUsers");
-        List<ChainUser> chainUsers = chainUserRepository.findAll();
-        return chainUsers;
+        return chainUserService.findAll();
     }
 
     /**
@@ -96,7 +94,7 @@ public class ChainUserResource {
     @Timed
     public ResponseEntity<ChainUser> getChainUser(@PathVariable Long id) {
         log.debug("REST request to get ChainUser : {}", id);
-        ChainUser chainUser = chainUserRepository.findOne(id);
+        ChainUser chainUser = chainUserService.findOne(id);
         return Optional.ofNullable(chainUser)
             .map(result -> new ResponseEntity<>(
                 result,
@@ -114,7 +112,7 @@ public class ChainUserResource {
     @Timed
     public ResponseEntity<Void> deleteChainUser(@PathVariable Long id) {
         log.debug("REST request to delete ChainUser : {}", id);
-        chainUserRepository.delete(id);
+        chainUserService.delete(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert("chainUser", id.toString())).build();
     }
 

@@ -6,6 +6,7 @@ import com.branciard.paza.pazauaa.config.SecurityBeanOverrideConfiguration;
 
 import com.branciard.paza.pazauaa.domain.ChainUser;
 import com.branciard.paza.pazauaa.repository.ChainUserRepository;
+import com.branciard.paza.pazauaa.service.ChainUserService;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -59,6 +60,9 @@ public class ChainUserResourceIntTest {
     private ChainUserRepository chainUserRepository;
 
     @Inject
+    private ChainUserService chainUserService;
+
+    @Inject
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
 
     @Inject
@@ -75,7 +79,7 @@ public class ChainUserResourceIntTest {
     public void setup() {
         MockitoAnnotations.initMocks(this);
         ChainUserResource chainUserResource = new ChainUserResource();
-        ReflectionTestUtils.setField(chainUserResource, "chainUserRepository", chainUserRepository);
+        ReflectionTestUtils.setField(chainUserResource, "chainUserService", chainUserService);
         this.restChainUserMockMvc = MockMvcBuilders.standaloneSetup(chainUserResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setMessageConverters(jacksonMessageConverter).build();
@@ -163,6 +167,24 @@ public class ChainUserResourceIntTest {
 
     @Test
     @Transactional
+    public void checkActivatedIsRequired() throws Exception {
+        int databaseSizeBeforeTest = chainUserRepository.findAll().size();
+        // set the field null
+        chainUser.setActivated(null);
+
+        // Create the ChainUser, which fails.
+
+        restChainUserMockMvc.perform(post("/api/chain-users")
+                .contentType(TestUtil.APPLICATION_JSON_UTF8)
+                .content(TestUtil.convertObjectToJsonBytes(chainUser)))
+                .andExpect(status().isBadRequest());
+
+        List<ChainUser> chainUsers = chainUserRepository.findAll();
+        assertThat(chainUsers).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
     public void getAllChainUsers() throws Exception {
         // Initialize the database
         chainUserRepository.saveAndFlush(chainUser);
@@ -209,7 +231,8 @@ public class ChainUserResourceIntTest {
     @Transactional
     public void updateChainUser() throws Exception {
         // Initialize the database
-        chainUserRepository.saveAndFlush(chainUser);
+        chainUserService.save(chainUser);
+
         int databaseSizeBeforeUpdate = chainUserRepository.findAll().size();
 
         // Update the chainUser
@@ -241,7 +264,8 @@ public class ChainUserResourceIntTest {
     @Transactional
     public void deleteChainUser() throws Exception {
         // Initialize the database
-        chainUserRepository.saveAndFlush(chainUser);
+        chainUserService.save(chainUser);
+
         int databaseSizeBeforeDelete = chainUserRepository.findAll().size();
 
         // Get the chainUser
