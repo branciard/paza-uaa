@@ -43,6 +43,10 @@ public class ChainUser implements Serializable {
     @Column(name = "e_cert")
     private String eCert;
 
+    @OneToOne
+    @JoinColumn(unique = true)
+    private User user;
+
     public Long getId() {
         return id;
     }
@@ -114,6 +118,19 @@ public class ChainUser implements Serializable {
 
     public void seteCert(String eCert) {
         this.eCert = eCert;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public ChainUser user(User user) {
+        this.user = user;
+        return this;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     @Override

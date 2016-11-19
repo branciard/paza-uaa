@@ -40,7 +40,9 @@
             <column name="e_cert" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
-            
+                        <column name="user_id" type="bigint">
+                <constraints unique="true" nullable="true" />
+            </column>
             <!-- jhipster-needle-liquibase-add-column - Jhipster will add columns here, do not remove-->
         </createTable>
         
