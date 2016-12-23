@@ -142,7 +142,7 @@ public class ChainUser implements Serializable {
             return false;
         }
         ChainUser chainUser = (ChainUser) o;
-        if(chainUser.id == null || id == null) {
+        if (chainUser.id == null || id == null) {
             return false;
         }
         return Objects.equals(id, chainUser.id);
