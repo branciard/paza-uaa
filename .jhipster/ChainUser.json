@@ -1,0 +1,50 @@
+{
+    "fluentMethods": true,
+    "relationships": [
+        {
+            "relationshipType": "one-to-one",
+            "relationshipName": "user",
+            "otherEntityName": "user",
+            "otherEntityField": "id",
+            "ownerSide": true,
+            "otherEntityRelationshipName": "chainUser"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "enrollmentId",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "enrollmentSecret",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "type",
+            "fieldType": "ChainUserType",
+            "fieldValues": "CLIENT,PEER,VALIDATOR,AUDITOR",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "activated",
+            "fieldType": "Boolean",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "eCert",
+            "fieldType": "String"
+        }
+    ],
+    "changelogDate": "20161117171143",
+    "entityTableName": "chain_user",
+    "dto": "no",
+    "pagination": "no",
+    "service": "serviceClass"
+}
