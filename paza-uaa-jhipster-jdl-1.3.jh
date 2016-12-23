@@ -15,4 +15,6 @@ entity ChainUser {
 	eCert String
 }
 
+
+
 service ChainUser with serviceClass

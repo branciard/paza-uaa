@@ -7,6 +7,7 @@ import com.branciard.paza.pazauaa.domain.User;
 import com.branciard.paza.pazauaa.repository.AuthorityRepository;
 import com.branciard.paza.pazauaa.repository.UserRepository;
 import com.branciard.paza.pazauaa.security.AuthoritiesConstants;
+import com.branciard.paza.pazauaa.service.ChainUserService;
 import com.branciard.paza.pazauaa.service.MailService;
 import com.branciard.paza.pazauaa.service.UserService;
 import com.branciard.paza.pazauaa.service.dto.UserDTO;
@@ -57,6 +58,9 @@ public class AccountResourceIntTest {
     @Inject
     private UserService userService;
 
+    @Inject
+    private ChainUserService chainUserService;
+
     @Mock
     private UserService mockUserService;
 
@@ -77,6 +81,7 @@ public class AccountResourceIntTest {
         ReflectionTestUtils.setField(accountResource, "userRepository", userRepository);
         ReflectionTestUtils.setField(accountResource, "userService", userService);
         ReflectionTestUtils.setField(accountResource, "mailService", mockMailService);
+        ReflectionTestUtils.setField(accountResource, "chainUserService", chainUserService);
 
         AccountResource accountUserMockResource = new AccountResource();
         ReflectionTestUtils.setField(accountUserMockResource, "userRepository", userRepository);

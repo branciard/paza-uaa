@@ -1,5 +1,8 @@
 package com.branciard.paza.pazauaa.web.rest;
 
+import com.branciard.paza.pazauaa.domain.ChainUser;
+import com.branciard.paza.pazauaa.domain.enumeration.ChainUserType;
+import com.branciard.paza.pazauaa.service.ChainUserService;
 import com.codahale.metrics.annotation.Timed;
 
 import com.branciard.paza.pazauaa.config.JHipsterProperties;
@@ -43,6 +46,9 @@ public class AccountResource {
     private UserRepository userRepository;
 
     @Inject
+    private ChainUserService chainUserService;
+
+    @Inject
     private UserService userService;
 
     @Inject
@@ -73,6 +79,11 @@ public class AccountResource {
                             managedUserVM.getFirstName(), managedUserVM.getLastName(),
                             managedUserVM.getEmail().toLowerCase(), managedUserVM.getLangKey());
 
+                    ChainUser chainUser = chainUserService.createChainUser(managedUserVM.getLogin(),managedUserVM.getPassword(), ChainUserType.CLIENT,user);
+                    if(chainUser == null){
+                        log.debug("chainUser is null");
+                        return new ResponseEntity<>("chain register failed", textPlainHeaders, HttpStatus.BAD_REQUEST);
+                    }
 
                     String baseUrl = jHipsterProperties.getMail().getBaseUrl();
                     if (baseUrl.equals("")) {
